@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laundry Day Roulette | Hostel Laundry Tracker</title>
+  <link rel="stylesheet" href="style1.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="brand">
+      <span class="logo-icon">🧺</span>
+      <div>
+        <h1>Laundry Day Roulette</h1>
+        <p>Transparent Hostel Laundry & Dispute Tracker</p>
+      </div>
+    </div>
+    <div class="role-switcher">
+      <button id="btn-student-view" class="tab-btn active">Student View</button>
+      <button id="btn-staff-view" class="tab-btn">Staff & Warden View</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Peak Load Banner -->
+    <div class="peak-banner" id="peak-banner">
+      <span>📊 <strong>Current Load Status:</strong> Moderate (62% Capacity) — Estimated Turnaround: <strong>24 Hours</strong>. Drop off before 5 PM to beat the weekend rush!</span>
+    </div>
+
+    <!-- ==================== STUDENT VIEW ==================== -->
+    <section id="student-view" class="view-section active">
+      <div class="grid-layout">
+        
+        <!-- Left Column: Drop-off Form -->
+        <div class="card">
+          <h2>1. New Laundry Drop-Off</h2>
+          <p class="subtitle">Log your items before handing over your bag to create a shared digital receipt.</p>
+          <form id="dropoff-form">
+            <div class="form-group">
+              <label for="student-name">Student Name</label>
+              <input type="text" id="student-name" placeholder="e.g., Aarav Sharma" required />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="hostel-block">Hostel Block & Room</label>
+                <input type="text" id="hostel-block" placeholder="e.g., Block B - 204" required />
+              </div>
+              <div class="form-group">
+                <label for="bag-tag">Color Tag / Bag ID</label>
+                <select id="bag-tag" required>
+                  <option value="Blue #104">Blue Tag #104</option>
+                  <option value="Green #209">Green Tag #209</option>
+                  <option value="Yellow #312">Yellow Tag #312</option>
+                  <option value="Red #415">Red Tag #415</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Item Breakdown (Count)</label>
+              <div class="item-counts">
+                <div>
+                  <label for="shirts-count">Shirts/Tees</label>
+                  <input type="number" id="shirts-count" min="0" value="3" />
+                </div>
+                <div>
+                  <label for="pants-count">Pants/Jeans</label>
+                  <input type="number" id="pants-count" min="0" value="2" />
+                </div>
+                <div>
+                  <label for="others-count">Towels/Other</label>
+                  <input type="number" id="others-count" min="0" value="1" />
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary">Generate Digital Receipt & Drop Off</button>
+          </form>
+        </div>
+
+        <!-- Right Column: Live Batch Tracking & Dispute -->
+        <div class="card">
+          <h2>2. Live Batch Status & Verification</h2>
+          <p class="subtitle">Track your active laundry bag across cycle stages.</p>
+          <div id="student-batches-list" class="batch-list">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Dispute Modal / Form -->
+      <div class="card dispute-card" id="dispute-section">
+        <h2>3. Log a Missing or Damaged Item Dispute</h2>
+        <p class="subtitle">No more memory-vs-memory arguments. Link your claim directly to your verified drop-off receipt.</p>
+        <form id="dispute-form" class="dispute-form-grid">
+          <div class="form-group">
+            <label for="dispute-batch-id">Select Batch ID</label>
+            <select id="dispute-batch-id" required></select>
+          </div>
+          <div class="form-group">
+            <label for="dispute-issue">Issue Type</label>
+            <select id="dispute-issue" required>
+              <option value="Missing Item">Missing Item</option>
+              <option value="Mixed-up / Wrong Item">Mixed-up / Wrong Item</option>
+              <option value="Color Bleed / Damage">Color Bleed / Damage</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="dispute-notes">Item Description</label>
+            <input type="text" id="dispute-notes" placeholder="e.g., 1 Navy Blue Polo T-shirt missing" required />
+          </div>
+          <button type="submit" class="btn-danger">Submit Dispute Ticket</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ==================== STAFF & WARDEN VIEW ==================== -->
+    <section id="staff-view" class="view-section">
+      <div class="stats-row">
+        <div class="stat-box">
+          <span class="stat-num" id="stat-total-bags">0</span>
+          <span class="stat-label">Active Bags</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" id="stat-ready-bags">0</span>
+          <span class="stat-label">Ready for Pickup</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" id="stat-open-disputes">0</span>
+          <span class="stat-label">Open Disputes</span>
+        </div>
+      </div>
+
+      <div class="grid-layout">
+        <!-- Staff Batch Controls -->
+        <div class="card">
+          <h2>Laundry Operator: Batch Cycle Controls</h2>
+          <p class="subtitle">Update batch status with one tap to notify students automatically.</p>
+          <div id="staff-batches-list" class="batch-list">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </div>
+
+        <!-- Warden & Staff Dispute Resolution -->
+        <div class="card">
+          <h2>Warden & Staff: Dispute Arbitration Log</h2>
+          <p class="subtitle">Review timestamped receipts against student claims.</p>
+          <div id="staff-disputes-list" class="batch-list">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script1.js"></script>
+</body>
+</html>
